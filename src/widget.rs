@@ -68,10 +68,7 @@ impl StatefulWidget for Input {
             .chars()
             .skip(view_window.offsett)
             .take(view_window.width)
-            .map(|ch| match self.mask_symbol {
-                Some(mask) => mask,
-                None => ch,
-            })
+            .map(|ch| self.mask_symbol.unwrap_or_else(|| ch))
             .collect::<String>();
 
         for _ in display_text.chars().count()..(view_window.width) {
@@ -84,7 +81,8 @@ impl StatefulWidget for Input {
 
         for (idx, symbol) in display_text.chars().enumerate() {
             let cell = buf
-                .get_mut(area.x + idx as u16, area.y)
+                .cell_mut(Position::new(area.x + idx as u16, area.y))
+                .expect("Buffer overflow")
                 .set_symbol(symbol.to_string().as_str());
 
             let _ = if highlight_range.contains(&(view_window.offsett + idx))
