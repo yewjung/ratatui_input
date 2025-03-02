@@ -419,6 +419,10 @@ impl InputState {
     pub fn in_focus(&self) -> bool {
         self.in_focus
     }
+
+    pub fn toggle_focus(&mut self) {
+        self.in_focus = !self.in_focus;
+    }
 }
 
 fn char_idx_to_byte_idx(str: &str, char_idx: usize) -> usize {
